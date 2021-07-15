@@ -26,7 +26,7 @@ public class Enemy : MonoBehaviour
             if (GameObject.Find("Player") != null)
                 target = GameObject.Find("Player").transform.position;
             else
-                Destroy(this.gameObject);
+                Die();
         }
 
         Countdown();
@@ -65,11 +65,11 @@ public class Enemy : MonoBehaviour
     {
         if (collision.tag == "Laser")
         {
-            Destroy(this.gameObject);
+            Die();
         }
     }
 
-    private void OnDestroy()
+    void Die()
     {
         Instantiate(explosionPrefab, transform.position, Quaternion.identity);  
         if (GameObject.Find("Player") != null)
@@ -77,5 +77,6 @@ public class Enemy : MonoBehaviour
             GameObject.Find("Player").GetComponent<Player_Controller>().SetBoost(true);
             GameObject.Find("GameManager").GetComponent<Manager>().IncreaseBoost();
         }
+        Destroy(this.gameObject);
     }
 }

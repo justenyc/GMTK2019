@@ -15,7 +15,9 @@ public class Laser : MonoBehaviour
     {
         crosshair = GameObject.Find("CrossHair");
         transform.localScale = new Vector3(crosshair.transform.localScale.x, 100, 1);
-        Destroy(this.gameObject, 0.1f);
+        Destroy(this.gameObject, 1f);
+        Invoke("DisableHitBox", 0.1f);
+        Invoke("SendKillsToGameManager", 0.1f);
     }
 
     // Update is called once per frame
@@ -31,6 +33,17 @@ public class Laser : MonoBehaviour
         kills += 1;
     }
 
+    void DisableHitBox()
+    {
+        BoxCollider2D collider = GetComponent<BoxCollider2D>();
+        collider.enabled = false;
+    }
+
+    void SendKillsToGameManager()
+    {
+        GameObject.Find("GameManager").GetComponent<Manager>().SetKills(kills);
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Physics2D.IgnoreLayerCollision(0, 8);
@@ -38,10 +51,5 @@ public class Laser : MonoBehaviour
         {
             AddKills();
         }
-    }
-
-    private void OnDestroy()
-    {
-        GameObject.Find("GameManager").GetComponent<Manager>().SetKills(kills);
     }
 }
